@@ -1,3 +1,6 @@
+using BestPractices.Api.Extensions;
+using BestPractices.Api.Service.ContactFeatures;
+
 namespace BestPractices.Api
 {
     public class Program
@@ -21,6 +24,12 @@ namespace BestPractices.Api
             builder.Services.AddControllers();
             builder.Services.AddHealthChecks();
             builder.Services.AddEndpointsApiExplorer();
+
+            // Services
+            builder.Services.ConfigureCustomMapping();
+
+            builder.Services.AddScoped<IContactService, ContactService>();
+
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
@@ -32,13 +41,7 @@ namespace BestPractices.Api
                 app.UseSwaggerUI();
             }
 
-            app.UseHealthChecks("/api/health", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions()
-            {
-                ResponseWriter = async (context, report) =>
-                {
-                    await context.Response.WriteAsync("OK");
-                }
-            });
+            app.UseCustomHealthCheck();
 
             app.UseHttpsRedirection();
 

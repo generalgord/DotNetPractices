@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using BestPractices.Api.Models;
+using BestPractices.Api.Service.ContactFeatures;
+
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BestPractices.Api.Controllers
@@ -8,16 +11,24 @@ namespace BestPractices.Api.Controllers
     public class ContactController : ControllerBase
     {
         private readonly IConfiguration configuration;
+        private readonly IContactService contactService;
 
-        public ContactController(IConfiguration configuration)
+        public ContactController(IConfiguration configuration, IContactService contactService)
         {
             this.configuration = configuration;
+            this.contactService = contactService;
         }
 
         [HttpGet]
         public string Get()
         {
             return configuration["TestMe"].ToString();
+        }
+
+        [HttpGet("{id}")]
+        public ContactDAO GetContactById(int id)
+        {
+            return contactService.GetContactById(id);
         }
     }
 }
